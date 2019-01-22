@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda with Spring Boot.
+
+Resources:
+  LambdaSpringBootFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.packtpub.springfunctions.aws.handlers.LambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: target/spring-functions-0.0.1-SNAPSHOT-aws.jar
+      MemorySize: 1512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 60
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  LambdaSpringBootApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Stage/books'
+    Export:
+      Name: LambdaSpringBootApi
+
+
+
